@@ -350,14 +350,7 @@ function install_upgrade() {
         plasma-nm \
         sddm \
         sddm-kcm \
-        koompi-wallpapers \
-        koompi-plasma-themes \
-        sddm-theme-koompi \
-        qogir-icon-theme-koompi \
-        qogir-theme-koompi \
         la-capitaine-icon-theme-koompi \
-        mcmojave-kde-theme-koompi \
-        mcmojave-cursors-git \
         kwin-decoration-sierra-breeze-enhanced-git \
         fluent-decoration-git \
         kvantum-qt5 \
@@ -383,7 +376,6 @@ function install_upgrade() {
         libinput-gestures \
         libinput_gestures_qt \
         xdotool \
-        khmer-fonts \
         inter-font \
         noto-fonts \
         noto-fonts-cjk \
@@ -443,7 +435,6 @@ function install_upgrade() {
         firefox \
         google-chrome \
         telegram-desktop \
-        teams \
         zoom \
         xdman \
         libreoffice-fresh \
@@ -476,7 +467,6 @@ function install_upgrade() {
         kdf \
         partitionmanager \
         packagekit-qt5 \
-        bomi-git \
         sel-protocol \
         webkit2gtk \
         sel-protocol \
