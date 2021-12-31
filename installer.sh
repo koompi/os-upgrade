@@ -601,7 +601,7 @@ fi
 
 if [[ $continues -eq 1 ]]; then
     (remove_orphans) &
-    spinner "Cleaning up unneed packages"
+    spinner "Cleaning up unneeded packages"
     completed=$((completed + 1))
 fi
 
