@@ -49,7 +49,7 @@ function smart_update() {
         local conflict_files=($(cat /tmp/update.log | grep "exists in filesystem" | grep -o '/[^ ]*'))
 
         if [[ ${#conflict_files[@]} > 0 ]]; then
-            echo -e "\n${YELLOW}Conflict files detected. Resolving conflict files${NC}"
+            echo -e "\n${YELLOW}Conflicting files detected. Resolving conflict files${NC}"
             for ((i = 0; i < ${#conflict_files[@]}; i++)); do
                 sudo rm -rf ${conflict_files[$i]}
                 if [[ $? -eq 0 ]]; then
@@ -63,7 +63,7 @@ function smart_update() {
         local conflict_packages=($(cat /tmp/update.log | grep 'are in conflict' | grep -o 'Remove [^ ]*' | grep -oE '[^ ]+$' | sed -e "s/[?]//"))
 
         if [[ ${#conflict_packages[@]} > 0 ]]; then
-            echo -e "\n${YELLOW}Conflict packages detected. Resovling conflict packages.${NC}"
+            echo -e "\n${YELLOW}Conflicting packages detected. Resovling conflict packages.${NC}"
             for ((i = 0; i < ${#conflict_packages[@]}; i++)); do
                 sudo pacman -Rcc --noconfirm ${conflict_packages[$i]} >/dev/null 2>&1
                 if [[ $? -eq 0 ]]; then
@@ -77,7 +77,7 @@ function smart_update() {
         local breakers=($(cat /tmp/update.log | grep " breaks dependency " | grep -o 'required by [^ ]*' | grep -oE '[^ ]+$'))
 
         if [[ ${#breakers[@]} > 0 ]]; then
-            echo -e "\n${YELLOW}Conflict dependencies detected. Resovling conflicting dependencies.${NC}"
+            echo -e "\n${YELLOW}Conflicting dependencies detected. Resovling conflicting dependencies.${NC}"
             for ((i = 0; i < ${#breakers[@]}; i++)); do
                 sudo pacman -Rdd --noconfirm ${breakers[$i]} >/dev/null 2>&1
                 if [[ $? -eq 0 ]]; then
@@ -128,7 +128,7 @@ function smart_install() {
         local conflict_files=($(cat /tmp/installation.log | grep "exists in filesystem" | grep -o '/[^ ]*'))
 
         if [[ ${#conflict_files[@]} > 0 ]]; then
-            echo -e "\n${YELLOW}Conflict files detected. Resolving conflict files${NC}"
+            echo -e "\n${YELLOW}Conflicting files detected. Resolving conflicting files${NC}"
             for ((i = 0; i < ${#conflict_files[@]}; i++)); do
                 sudo rm -rf ${conflict_files[$i]}
                 if [[ $? -eq 0 ]]; then
@@ -142,7 +142,7 @@ function smart_install() {
         local conflict_packages=($(cat /tmp/installation.log | grep 'are in conflict' | grep -o 'Remove [^ ]*' | grep -oE '[^ ]+$' | sed -e "s/[?]//"))
 
         if [[ ${#conflict_packages[@]} > 0 ]]; then
-            echo -e "\n${YELLOW}Conflict packages detected. Resovling conflict packages.${NC}"
+            echo -e "\n${YELLOW}Conflicting packages detected. Resovling conflict packages.${NC}"
             for ((i = 0; i < ${#conflict_packages[@]}; i++)); do
                 sudo pacman -Rcc --noconfirm ${conflict_packages[$i]} >/dev/null 2>&1
                 if [[ $? -eq 0 ]]; then
@@ -156,7 +156,7 @@ function smart_install() {
         local breakers=($(cat /tmp/installation.log | grep " breaks dependency " | grep -o 'required by [^ ]*' | grep -oE '[^ ]+$'))
 
         if [[ ${#breakers[@]} > 0 ]]; then
-            echo -e "\n${YELLOW}Conflict dependencies detected. Resovling conflicting dependencies.${NC}"
+            echo -e "\n${YELLOW}Conflicting dependencies detected. Resovling conflicting dependencies.${NC}"
             for ((i = 0; i < ${#breakers[@]}; i++)); do
                 sudo pacman -Rdd --noconfirm ${breakers[$i]} >/dev/null 2>&1
                 if [[ $? -eq 0 ]]; then
@@ -350,14 +350,7 @@ function install_upgrade() {
         plasma-nm \
         sddm \
         sddm-kcm \
-        koompi-wallpapers \
-        koompi-plasma-themes \
-        sddm-theme-koompi \
-        qogir-icon-theme-koompi \
-        qogir-theme-koompi \
         la-capitaine-icon-theme-koompi \
-        mcmojave-kde-theme-koompi \
-        mcmojave-cursors-git \
         kwin-decoration-sierra-breeze-enhanced-git \
         fluent-decoration-git \
         kvantum-qt5 \
@@ -383,7 +376,6 @@ function install_upgrade() {
         libinput-gestures \
         libinput_gestures_qt \
         xdotool \
-        khmer-fonts \
         inter-font \
         noto-fonts \
         noto-fonts-cjk \
@@ -443,7 +435,6 @@ function install_upgrade() {
         firefox \
         google-chrome \
         telegram-desktop \
-        teams \
         zoom \
         xdman \
         libreoffice-fresh \
@@ -475,7 +466,6 @@ function install_upgrade() {
         kdf \
         partitionmanager \
         packagekit-qt5 \
-        bomi-git \
         sel-protocol \
         webkit2gtk \
         sel-protocol \
@@ -589,18 +579,18 @@ echo -e "Upgrade to version 2.7.1"
 echo -e "Initialzing generation upgrade"
 echo -e ""
 prevent_power_management
-echo -e "${RED}NOTE: During update, do not turn off your computer.${NC}"
+echo -e "${RED}NOTICE: During update, do not turn off this device, or close this terminal window.${NC}"
 echo -e ""
 
 if [[ $continues -eq 1 ]]; then
     (insert_koompi_repo) &
-    spinner "Updating the new repository of KOOMPI OS"
+    spinner "Updating the KOOMPI OS repository"
     completed=$((completed + 1))
 fi
 
 if [[ $continues -eq 1 ]]; then
     (remove_orphans) &
-    spinner "Cleaning up unneed packages"
+    spinner "Cleaning up unneeded packages"
     completed=$((completed + 1))
 fi
 
@@ -612,7 +602,7 @@ fi
 
 if [[ $continues -eq 1 ]]; then
     (security_patch) &
-    spinner "Updating the default security configurations"
+    spinner "Updating default security configurations"
     completed=$((completed + 1))
 fi
 
@@ -652,16 +642,16 @@ if [[ $continues -eq 1 ]]; then
     echo -e "${CYAN}====================================================================== ${NC}"
     echo -e ""
     echo -e "${GREEN}Upgraded to version 2.7.1${NC}"
-    echo -e "${YELLOW}Please restart your computer before continue using.${NC}"
+    echo -e "${YELLOW}Please restart your computer before further use${NC}"
     echo -e ""
 else
     echo -e ""
     allow_power_management
     echo -e "${RED}====================================================================== ${NC}"
     echo -e ""
-    echo -e "${RED}Upgraded failed${NC}"
-    echo -e "${YELLOW}${completed} steps was completed"
-    echo -e "There was many attemps to solve the issue but still unable to automatically fix."
+    echo -e "${RED}Upgrade failed${NC}"
+    echo -e "${YELLOW}${completed} steps were completed"
+    echo -e "We have attempted to fix this issue, but we cannot fix it."
     echo -e "${RED}Please run:${NC}"
     echo -e ""
     echo -e "${RED}sudo pacman -Syyu${NC}"
@@ -675,4 +665,3 @@ fi
 
 # To unset presentation mode
 # qdbus org.freedesktop.PowerManagement.Inhibit /org/freedesktop/PowerManagement/Inhibit org.freedesktop.PowerManagement.Inhibit.UnInhibit $inhibit_cookie
-
