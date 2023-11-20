@@ -270,9 +270,6 @@ function install_upgrade() {
     smart_install \
         networkmanager \
         kirigami-addons5 \
-        linux \
-        linux-headers \
-        linux-firmware \
         acpi \
         fcitx5-im \
         koompi-skel \
@@ -297,10 +294,37 @@ function install_upgrade() {
         kcalc \
         rtw88-dkms-git;
 
+        ## OS3 Packages
+        smart_install \
+        koompi-os \
+        pix \
+        adwdialog \
+        koompi-control-center \
+        micro-distrobox \
+        pix \
+        python-yaml \
+        koompi-backgrounds \
+        waydroid-koompi \
+        waydroid-image \
+        wpm \
+        linux-zen \
+        linux-zen-headers \
+        linux-atm \
+        linux-firmware \
+        linux-firmware-marvell;
+        
+        ### Gnome Software
+        smart_install \
+        gnome \
+        firefox \
+        flatpak \
+        
+
     # release config
-    echo -e "[General]\nName=KOOMPI OS\nPRETTY_NAME=KOOMPI OS\nLogoPath=/usr/share/icons/koompi/koompi.svg\nWebsite=http://www.koompi.com\nVersion=2.8.1\nVariant=Rolling Release\nUseOSReleaseVersion=false" | sudo tee /etc/xdg/kcm-about-distrorc >/dev/null 2>&1
-    echo -e 'NAME="KOOMPI OS"\nPRETTY_NAME="KOOMPI OS"\nID=koompi\nBUILD_ID=rolling\nANSI_COLOR="38;2;23;147;209"\nHOME_URL="https://www.koompi.com/"\nDOCUMENTATION_URL="https://wiki.koompi.org/"\nSUPPORT_URL="https://t.me/koompi"\nBUG_REPORT_URL="https://t.me/koompi"\nLOGO=/usr/share/icons/koompi/koompi.svg' | sudo tee /etc/os-release >/dev/null 2>&1
-    echo -e '[device]\nwifi.backend=iwd\n' | sudo tee /etc/NetworkManager/conf.d/iwd.conf >/dev/null 2>&1
+    #echo -e "[General]\nName=KOOMPI OS\nPRETTY_NAME=KOOMPI OS\nLogoPath=/usr/share/icons/koompi/koompi.svg\nWebsite=http://www.koompi.com\nVersion=2.8.1\nVariant=Rolling Release\nUseOSReleaseVersion=false" | sudo tee /etc/xdg/kcm-about-distrorc >/dev/null 2>&1
+    #echo -e 'NAME="KOOMPI OS"\nPRETTY_NAME="KOOMPI OS"\nID=koompi\nBUILD_ID=rolling\nANSI_COLOR="38;2;23;147;209"\nHOME_URL="https://www.koompi.com/"\nDOCUMENTATION_URL="https://wiki.koompi.org/"\nSUPPORT_URL="https://t.me/koompi"\nBUG_REPORT_URL="https://t.me/koompi"\nLOGO=/usr/share/icons/koompi/koompi.svg' | sudo tee /etc/os-release >/dev/null 2>&1    
+    #echo -e '[device]\nwifi.backend=iwd\n' | sudo tee /etc/NetworkManager/conf.d/iwd.conf >/dev/null 2>&1
+  
 }
 
 function remove_dropped_packages() {
@@ -419,6 +443,7 @@ function update_grub() {
 function apply_config() {
     # Reapply skel to fix broken key bind issue
     # UPDATE: Added bashrc and bash profile to fix some fcitx5 issue
+    # TODO: Update koompi-skel (add gnome config, pizzard, etc)
     as_su cp -r -T /etc/skel/ ${HOME}
     as_su chown ${USER}:users -R ${HOME} &>/dev/null
     as_su usermod -aG realtime ${USER}
@@ -432,6 +457,13 @@ function allow_power_management() {
     as_su systemctl --quiet --runtime unmask halt.target poweroff.target reboot.target kexec.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target sleep.target >/dev/null 2>&1
 }
 
+function can_install_os3() {
+    # Check current version < 3.0.0 then remove /etc/os-release and then proceed to install KOOMPI-3.0.0
+    # If version = 3.0.0, Break and Show Latest Version else proceed to install the update.
+    
+}
+
+can_install_os3
 checkpw
 setup_log
 prevent_power_management
@@ -444,7 +476,7 @@ echo -e "${CYAN} ██╔═██╗ ██║   ██║██║   ██�
 echo -e "${CYAN} ██║  ██╗╚██████╔╝╚██████╔╝██║ ╚═╝ ██║██║     ██║    ╚██████╔╝███████║ ${NC}"
 echo -e "${CYAN} ╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝     ╚═════╝ ╚══════╝ ${NC}"
 echo -e "${CYAN}====================================================================== ${NC}\n"
-echo -e "Upgrade to version 2.8.1\nInitialzing generation upgrade\n"
+echo -e "Upgrade to version 3.0.0\nInitialzing generation upgrade\n"
 echo -e "${RED}NOTE: During update, do not turn off your computer.${NC}\n"
 
 if [[ $continues -eq 1 ]]; then
@@ -469,7 +501,7 @@ logging
 
 if [[ $continues -eq 1 ]]; then
     (install_upgrade) &
-    spinner "Upgrading to KOOMPI OS 2.8.1"
+    spinner "Upgrading to KOOMPI OS 3.0.0"
     completed=$((completed + 1))
 fi
 
@@ -496,7 +528,7 @@ allow_power_management
 
 if [[ $continues -eq 1 ]]; then
     echo -e "\n${CYAN}====================================================================== ${NC}\n"
-    echo -e "${GREEN}Upgraded to version 2.8.1${NC}"
+    echo -e "${GREEN}Upgraded to version 3.0.0${NC}"
     echo -e "${YELLOW}Please restart your computer before continue using.${NC}\n"
 
 else
